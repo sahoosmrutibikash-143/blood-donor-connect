@@ -113,6 +113,10 @@ function roleFromPage() {
     return "patient";
   }
 
+  if (location.pathname.includes("patient-login")) {
+    return "patient";
+  }
+
   if (location.pathname.includes("donor-login")) {
     return "donor";
   }
