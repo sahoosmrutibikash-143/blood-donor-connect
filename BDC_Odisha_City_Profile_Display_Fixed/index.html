@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Donor Connect | Login</title>
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<main class="auth-shell">
+  <section class="hero">
+    <button class="brand-mark" id="adminTrigger" title="Blood Donor Connect" type="button">🩸</button>
+    <p class="eyebrow">EVERY DROP MATTERS</p>
+    <h1>Blood Donor<br><span>Connect</span></h1>
+    <p class="tagline">A secure platform connecting patients, donors and blood resources.</p>
+  </section>
+  <section class="role-card">
+    <p class="eyebrow">SECURE LOGIN</p>
+    <h2>Welcome back</h2>
+    <p class="muted">Select your account type to continue.</p>
+    <div class="role-switch" role="tablist">
+      <button type="button" class="role-tab active" data-role="donor">🩸 Donor</button>
+      <button type="button" class="role-tab" data-role="patient">👤 Patient</button>
+    </div>
+    <form id="loginForm" class="login-form">
+      <input type="hidden" id="loginRole" value="donor">
+      <label>Email address<input id="identifier" type="email" autocomplete="username" placeholder="you@example.com" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required></label>
+      <button class="primary-btn" type="submit">Sign in</button>
+      <p id="message" class="form-message"></p>
+    </form>
+    <p class="switch">New account? <a id="signupLink" href="signup.html?role=donor">Create donor account</a></p>
+    <p class="security-note">🔒 Authentication and sessions are handled by Supabase.</p>
+  </section>
+</main>
+<div id="adminModal" class="modal hidden"><div class="modal-card">
+  <button class="close" id="closeAdmin" type="button">×</button><div class="modal-icon">🔐</div>
+  <p class="eyebrow">RESTRICTED ACCESS</p><h2>Admin Portal</h2><p class="muted">Sign in with an authorized administrator account.</p>
+  <button id="openAdminLogin" class="primary-btn" type="button">Open Admin Login</button>
+</div></div>
+<script type="module" src="js/auth.js"></script><script src="js/admin-trigger.js"></script>
+</body></html>

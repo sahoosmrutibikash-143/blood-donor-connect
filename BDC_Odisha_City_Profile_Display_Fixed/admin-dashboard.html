@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Blood Donor Connect</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <style>
+        /* ========================================
+           CLICKABLE STAT CARDS
+        ======================================== */
+
+        .stats article {
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .stats article:hover {
+            transform: translateY(-4px);
+            border-color: #ef3b4f;
+            background: rgba(239, 59, 79, 0.06);
+        }
+
+        .stats article.active {
+            border-color: #ef3b4f;
+            box-shadow: 0 0 0 1px rgba(239, 59, 79, 0.25);
+        }
+
+
+        /* ========================================
+           DETAIL PANEL
+        ======================================== */
+
+        .admin-detail-panel {
+            display: none;
+            margin-top: 24px;
+        }
+
+        .admin-detail-panel.show {
+            display: block;
+        }
+
+        .admin-detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .admin-detail-header h2 {
+            margin: 0;
+        }
+
+        .close-detail-btn {
+            border: 1px solid #333;
+            background: transparent;
+            color: #fff;
+            padding: 9px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .close-detail-btn:hover {
+            border-color: #ef3b4f;
+        }
+
+
+        /* ========================================
+           RECORD GRID
+        ======================================== */
+
+        .admin-record-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .admin-record-card {
+            border: 1px solid #29292f;
+            background: #111116;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .admin-record-card h3 {
+            margin: 0 0 15px;
+            font-size: 18px;
+        }
+
+        .record-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 9px 0;
+            border-bottom: 1px solid #222229;
+        }
+
+        .record-row:last-child {
+            border-bottom: none;
+        }
+
+        .record-label {
+            color: #999;
+        }
+
+        .record-value {
+            color: #fff;
+            text-align: right;
+        }
+
+        .available-badge {
+            color: #4ade80;
+        }
+
+        .unavailable-badge {
+            color: #f87171;
+        }
+
+        .record-count {
+            margin-bottom: 18px;
+            color: #aaa;
+        }
+
+
+        /* ========================================
+           MOBILE
+        ======================================== */
+
+        @media (max-width: 700px) {
+
+            .admin-record-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-detail-header {
+                align-items: flex-start;
+            }
+
+            .record-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .record-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<main class="dashboard">
+
+    <!-- ========================================
+         HEADER
+    ======================================== -->
+
+    <header>
+
+        <div>
+
+            <p class="eyebrow">
+                RESTRICTED ACCESS
+            </p>
+
+            <h1>
+                Admin Control Center
+            </h1>
+
+            <p class="muted">
+                Monitor users, requests and blood inventory.
+            </p>
+
+        </div>
+
+        <button
+            id="logout"
+            class="outline-btn"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </header>
+
+
+    <!-- ========================================
+         STATISTICS
+    ======================================== -->
+
+    <div class="stats">
+
+        <article
+            id="donorsStatCard"
+            data-section="donors"
+            tabindex="0"
+            role="button"
+        >
+
+            <strong id="statDonors">
+                —
+            </strong>
+
+            <span>
+                Donors
+            </span>
+
+        </article>
+
+
+        <article
+            id="patientsStatCard"
+            data-section="patients"
+            tabindex="0"
+            role="button"
+        >
+
+            <strong id="statPatients">
+                —
+            </strong>
+
+            <span>
+                Patients
+            </span>
+
+        </article>
+
+
+        <article
+            id="requestsStatCard"
+            data-section="requests"
+            tabindex="0"
+            role="button"
+        >
+
+            <strong id="statRequests">
+                —
+            </strong>
+
+            <span>
+                Requests
+            </span>
+
+        </article>
+
+
+        <article
+            id="emergencyStatCard"
+            data-section="emergency"
+            tabindex="0"
+            role="button"
+        >
+
+            <strong id="statEmergency">
+                —
+            </strong>
+
+            <span>
+                Emergency
+            </span>
+
+        </article>
+
+    </div>
+
+
+    <!-- ========================================
+         DETAIL PANEL
+    ======================================== -->
+
+    <section
+        id="adminDetailPanel"
+        class="history-card admin-detail-panel"
+    >
+
+        <div class="admin-detail-header">
+
+            <div>
+
+                <p
+                    id="detailEyebrow"
+                    class="eyebrow"
+                >
+                    ADMIN MANAGEMENT
+                </p>
+
+                <h2 id="detailTitle">
+                    Details
+                </h2>
+
+            </div>
+
+
+            <button
+                id="closeDetail"
+                class="close-detail-btn"
+                type="button"
+            >
+                Close
+            </button>
+
+        </div>
+
+
+        <div id="adminDetailContent">
+
+            <p class="muted">
+                Select a section above.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         BLOOD INVENTORY
+    ======================================== -->
+
+    <section class="history-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="eyebrow">
+                    INVENTORY
+                </p>
+
+                <h2>
+                    Blood stock
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="inventory"
+            class="inventory-list"
+        >
+
+            <p class="muted">
+                Loading inventory...
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         REQUESTS
+    ======================================== -->
+
+    <section class="history-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <p class="eyebrow">
+                    REQUESTS
+                </p>
+
+                <h2>
+                    Recent blood requests
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div id="adminRequests"></div>
+
+    </section>
+
+
+    <p
+        id="pageMessage"
+        class="form-message"
+    ></p>
+
+</main>
+
+
+<script
+    type="module"
+    src="js/admin-dashboard.js"
+></script>
+
+</body>
+
+</html>
