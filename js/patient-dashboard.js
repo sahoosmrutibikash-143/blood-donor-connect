@@ -2000,8 +2000,8 @@ findBloodForm?.addEventListener(
                 .toUpperCase();
 
         let cityName =
-            findBloodCity?.value
-                ?.trim();
+    $("findBloodCity")?.value
+        ?.trim();
 
 
         /* =================================================
