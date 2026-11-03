@@ -702,91 +702,7 @@
 
                 City
 
-                <select id="findBloodCity" required>
-                    <option value="">Select city</option>
-<option value="Agartala">Agartala</option>
-<option value="Agra">Agra</option>
-<option value="Ahmedabad">Ahmedabad</option>
-<option value="Ajmer">Ajmer</option>
-<option value="Aligarh">Aligarh</option>
-<option value="Amritsar">Amritsar</option>
-<option value="Asansol">Asansol</option>
-<option value="Aurangabad">Aurangabad</option>
-<option value="Bengaluru">Bengaluru</option>
-<option value="Bhopal">Bhopal</option>
-<option value="Bhubaneswar">Bhubaneswar</option>
-<option value="Bilaspur">Bilaspur</option>
-<option value="Chandigarh">Chandigarh</option>
-<option value="Chennai">Chennai</option>
-<option value="Coimbatore">Coimbatore</option>
-<option value="Cuttack">Cuttack</option>
-<option value="Dehradun">Dehradun</option>
-<option value="Delhi">Delhi</option>
-<option value="Dhanbad">Dhanbad</option>
-<option value="Dharamshala">Dharamshala</option>
-<option value="Durgapur">Durgapur</option>
-<option value="Faridabad">Faridabad</option>
-<option value="Gandhinagar">Gandhinagar</option>
-<option value="Ghaziabad">Ghaziabad</option>
-<option value="Goa">Goa</option>
-<option value="Greater Noida">Greater Noida</option>
-<option value="Guntur">Guntur</option>
-<option value="Gurugram">Gurugram</option>
-<option value="Guwahati">Guwahati</option>
-<option value="Gwalior">Gwalior</option>
-<option value="Haridwar">Haridwar</option>
-<option value="Howrah">Howrah</option>
-<option value="Hubballi">Hubballi</option>
-<option value="Hyderabad">Hyderabad</option>
-<option value="Imphal">Imphal</option>
-<option value="Indore">Indore</option>
-<option value="Jabalpur">Jabalpur</option>
-<option value="Jaipur">Jaipur</option>
-<option value="Jalandhar">Jalandhar</option>
-<option value="Jammu">Jammu</option>
-<option value="Jamshedpur">Jamshedpur</option>
-<option value="Jodhpur">Jodhpur</option>
-<option value="Kanpur">Kanpur</option>
-<option value="Kochi">Kochi</option>
-<option value="Kohima">Kohima</option>
-<option value="Kolkata">Kolkata</option>
-<option value="Kollam">Kollam</option>
-<option value="Kota">Kota</option>
-<option value="Kozhikode">Kozhikode</option>
-<option value="Lucknow">Lucknow</option>
-<option value="Ludhiana">Ludhiana</option>
-<option value="Madurai">Madurai</option>
-<option value="Mangaluru">Mangaluru</option>
-<option value="Meerut">Meerut</option>
-<option value="Mumbai">Mumbai</option>
-<option value="Mysuru">Mysuru</option>
-<option value="Nagpur">Nagpur</option>
-<option value="Nashik">Nashik</option>
-<option value="Noida">Noida</option>
-<option value="Patna">Patna</option>
-<option value="Prayagraj">Prayagraj</option>
-<option value="Puducherry">Puducherry</option>
-<option value="Pune">Pune</option>
-<option value="Raipur">Raipur</option>
-<option value="Rajkot">Rajkot</option>
-<option value="Ranchi">Ranchi</option>
-<option value="Rourkela">Rourkela</option>
-<option value="Salem">Salem</option>
-<option value="Shillong">Shillong</option>
-<option value="Shimla">Shimla</option>
-<option value="Siliguri">Siliguri</option>
-<option value="Srinagar">Srinagar</option>
-<option value="Surat">Surat</option>
-<option value="Thane">Thane</option>
-<option value="Thiruvananthapuram">Thiruvananthapuram</option>
-<option value="Tiruchirappalli">Tiruchirappalli</option>
-<option value="Udaipur">Udaipur</option>
-<option value="Varanasi">Varanasi</option>
-<option value="Vijayawada">Vijayawada</option>
-<option value="Visakhapatnam">Visakhapatnam</option>
-<option value="Warangal">Warangal</option>
-<option value="Other">Other / not listed</option>
-                </select>
+                <input type="text" id="findBloodCity" name="city" placeholder="Enter city (e.g., Jatani)" autocomplete="address-level2" required>
 
             </label>
             <div class="bdc-map-wrap">
@@ -1084,11 +1000,11 @@
  const reqCity=document.getElementById('requestCity'); const hospital=document.getElementById('requestHospital'); const reqMap=document.getElementById('requestLocationMap');
  const updateFind=()=>{if(findMap) findMap.src=mapUrl([city?.value,'India'].filter(Boolean).join(', '));};
  const updateReq=()=>{if(reqMap) reqMap.src=mapUrl([hospital?.value,reqCity?.value,'India'].filter(Boolean).join(', '));};
- city?.addEventListener('change',updateFind); reqCity?.addEventListener('change',updateReq); hospital?.addEventListener('change',updateReq); hospital?.addEventListener('blur',updateReq);
+ city?.addEventListener('change',updateFind); city?.addEventListener('input',updateFind); reqCity?.addEventListener('change',updateReq); hospital?.addEventListener('change',updateReq); hospital?.addEventListener('blur',updateReq);
  updateFind(); updateReq();
 })();
 </script>
-<script>window.bdcSetCityValue=function(id,value){const el=document.getElementById(id);if(!el||!value)return;if(!Array.from(el.options).some(o=>o.value.toLowerCase()===String(value).toLowerCase())){const opt=document.createElement('option');opt.value=value;opt.textContent=value+' (saved location)';el.insertBefore(opt,el.lastElementChild);}el.value=value;};</script>
+<script>window.bdcSetCityValue=function(id,value){const el=document.getElementById(id);if(el && value) el.value=String(value);};</script>
 <script type="module" src="js/patient-dashboard.js"></script>
 
 
