@@ -1,0 +1,3 @@
+const trigger=document.getElementById("adminTrigger");const modal=document.getElementById("adminModal");const close=document.getElementById("closeAdmin");const open=document.getElementById("openAdminLogin");let taps=0;let timer;
+if(trigger&&modal){trigger.addEventListener("click",()=>{taps++;clearTimeout(timer);timer=setTimeout(()=>taps=0,1500);if(taps===4){taps=0;modal.classList.remove("hidden");}});}
+close?.addEventListener("click",()=>modal?.classList.add("hidden"));modal?.addEventListener("click",e=>{if(e.target===modal)modal.classList.add("hidden")});open?.addEventListener("click",()=>location.href="admin-login.html");

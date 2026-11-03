@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Patient Dashboard | Blood Donor Connect</title>
+
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <style>
+    .patient-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .action-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .action-icon {
+      font-size: 30px;
+      margin-bottom: 12px;
+    }
+
+    .action-card h3 {
+      margin: 0 0 8px;
+      font-family: "Playfair Display", serif;
+      font-size: 22px;
+    }
+
+    .action-card p {
+      color: var(--muted);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .primary-btn {
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 11px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .primary-btn:hover {
+      opacity: 0.9;
+    }
+
+    .profile-card,
+    .history-card {
+      margin-top: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .profile-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .profile-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .profile-item strong {
+      font-size: 16px;
+    }
+
+    .blood-value {
+      color: #ff6873;
+    }
+
+    .request-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .request-card strong {
+      font-size: 19px;
+    }
+
+    .request-card p {
+      color: var(--muted);
+      margin: 7px 0 0;
+    }
+
+    .request-status {
+      color: #ff6873;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .empty-state {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border: 1px dashed var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      margin-top: 20px;
+    }
+
+    .empty-state span {
+      font-size: 30px;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 5px;
+      font-family: "Playfair Display", serif;
+    }
+
+    .empty-state p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      width: min(560px, 100%);
+      background: #121216;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 28px;
+      position: relative;
+    }
+
+    .modal-card h2 {
+      margin-top: 8px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .request-form {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .request-form label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .request-form input,
+    .request-form select,
+    .request-form textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #0b0b0e;
+      color: white;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .request-form textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-message {
+      margin-top: 12px;
+      color: #ff6873;
+    }
+
+    @media(max-width:800px) {
+      .patient-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(max-width:500px) {
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .request-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    /* =========================================================
+   FIND BLOOD MODAL
+   ========================================================= */
+
+.find-blood-modal-card {
+    width: min(500px, 100%);
+}
+
+.find-blood-form {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.find-blood-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.find-blood-form input,
+.find-blood-form select {
+    width: 100%;
+    padding: 12px 13px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #0b0b0e;
+    color: white;
+    font-family: inherit;
+    outline: none;
+}
+
+.find-blood-form input:focus,
+.find-blood-form select:focus {
+    border-color: var(--accent);
+}
+
+.find-blood-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.secondary-btn {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: white;
+    padding: 11px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,0.05);
+}
+  </style>
+<style>
+.bdc-map-wrap{margin:10px 0 16px;padding:10px;border:1px solid var(--border, #292929);border-radius:12px;background:rgba(255,255,255,.02)}
+.bdc-map-caption{font-size:12px;color:var(--muted);margin:0 0 8px}
+.bdc-map-wrap iframe{display:block;width:100%;height:210px;border:0;border-radius:9px;background:#171717}
+</style>
+</head>
+
+
+<body>
+
+<main class="dashboard">
+
+  <!-- HEADER -->
+  <header>
+
+    <div>
+      <p class="eyebrow">PATIENT PORTAL</p>
+
+      <h1>
+        Welcome, <span id="patientName">Patient</span>
+      </h1>
+
+      <p style="color:var(--muted);">
+        Find blood, submit requests and track your requests.
+      </p>
+    </div>
+
+    <button id="logout" class="outline-btn">
+      Logout
+    </button>
+
+  </header>
+
+
+  <!-- PROFILE -->
+  <section class="profile-card">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="eyebrow">YOUR PROFILE</p>
+        <h2>Patient Information</h2>
+      </div>
+
+    </div>
+
+
+    <div class="profile-grid">
+
+      <div class="profile-item">
+        <span>Full Name</span>
+        <strong id="patientNameProfile">Loading...</strong>
+      </div>
+
+      <div class="profile-item">
+        <span>Blood Group</span>
+        <strong id="bloodGroup" class="blood-value">
+          Loading...
+        </strong>
+      </div>
+
+      <div class="profile-item">
+        <span>Mobile Number</span>
+        <strong id="mobile">
+          Loading...
+        </strong>
+      </div>
+
+      <div class="profile-item">
+        <span>City</span>
+        <strong id="city">
+          Loading...
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- QUICK ACTIONS -->
+  <section>
+
+    <div style="margin-top:32px;">
+      <p class="eyebrow">QUICK ACTIONS</p>
+      <h2>Blood Services</h2>
+    </div>
+
+
+    <div class="patient-actions">
+
+      <!-- FIND BLOOD -->
+      <article class="action-card">
+
+        <div class="action-icon">🔎</div>
+
+        <h3>Find Blood</h3>
+
+        <p>
+          Search available blood according to your requirement.
+        </p>
+
+        <button
+          class="primary-btn"
+          id="findBloodBtn"
+          type="button"
+        >
+          Find Blood
+        </button>
+
+      </article>
+
+
+      <!-- REQUEST BLOOD -->
+      <article class="action-card">
+
+        <div class="action-icon">🩸</div>
+
+        <h3>Request Blood</h3>
+
+        <p>
+          Submit a blood request and track its status.
+        </p>
+
+        <button
+          class="primary-btn"
+          id="requestBloodBtn"
+          type="button"
+        >
+          Request Blood
+        </button>
+
+      </article>
+
+
+      <!-- EMERGENCY -->
+      <article class="action-card">
+
+        <div class="action-icon">🚨</div>
+
+        <h3>Emergency Request</h3>
+
+        <p>
+          Submit an urgent blood requirement.
+        </p>
+
+        <button
+          class="primary-btn"
+          id="emergencyBtn"
+          type="button"
+        >
+          Emergency Request
+        </button>
+
+      </article>
+
+    </div>
+
+  </section>
+
+
+  <!-- MY REQUESTS -->
+  <section class="history-card">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="eyebrow">YOUR REQUESTS</p>
+        <h2>My Blood Requests</h2>
+      </div>
+
+    </div>
+
+
+    <div id="findBloodResult"></div>
+
+    <div id="requestList">
+
+      <div class="empty-state">
+
+        <span>🩸</span>
+
+        <div>
+          <h3>No blood requests yet</h3>
+
+          <p>
+            Your blood requests will appear here.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+<!-- FIND BLOOD MODAL -->
+<div id="findBloodModal" class="modal hidden">
+
+    <div class="modal-card find-blood-modal-card">
+
+        <button
+            id="closeFindBloodModal"
+            class="modal-close"
+            type="button"
+        >
+            ×
+        </button>
+
+        <p class="eyebrow">BLOOD SEARCH</p>
+
+        <h2>Find Blood</h2>
+
+        <p style="color:var(--muted); margin-top:8px;">
+            Enter the blood group and city you need. Results are preliminary same-group matches only; blood bank staff must confirm compatibility and availability before transfusion.
+        </p>
+
+
+        <form
+            id="findBloodForm"
+            class="find-blood-form"
+        >
+
+            <!-- BLOOD GROUP -->
+
+            <label>
+
+                Blood Group
+
+                <select
+                    id="findBloodGroup"
+                    required
+                >
+
+                    <option value="">
+                        Select blood group
+                    </option>
+
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+
+                </select>
+
+            </label>
+
+
+            <!-- CITY -->
+
+            <label>
+
+                City
+
+                <select id="findBloodCity" required>
+                    <option value="">Select city</option>
+<option value="Agartala">Agartala</option>
+<option value="Agra">Agra</option>
+<option value="Ahmedabad">Ahmedabad</option>
+<option value="Ajmer">Ajmer</option>
+<option value="Aligarh">Aligarh</option>
+<option value="Amritsar">Amritsar</option>
+<option value="Asansol">Asansol</option>
+<option value="Aurangabad">Aurangabad</option>
+<option value="Bengaluru">Bengaluru</option>
+<option value="Bhopal">Bhopal</option>
+<option value="Bhubaneswar">Bhubaneswar</option>
+<option value="Bilaspur">Bilaspur</option>
+<option value="Chandigarh">Chandigarh</option>
+<option value="Chennai">Chennai</option>
+<option value="Coimbatore">Coimbatore</option>
+<option value="Cuttack">Cuttack</option>
+<option value="Dehradun">Dehradun</option>
+<option value="Delhi">Delhi</option>
+<option value="Dhanbad">Dhanbad</option>
+<option value="Dharamshala">Dharamshala</option>
+<option value="Durgapur">Durgapur</option>
+<option value="Faridabad">Faridabad</option>
+<option value="Gandhinagar">Gandhinagar</option>
+<option value="Ghaziabad">Ghaziabad</option>
+<option value="Goa">Goa</option>
+<option value="Greater Noida">Greater Noida</option>
+<option value="Guntur">Guntur</option>
+<option value="Gurugram">Gurugram</option>
+<option value="Guwahati">Guwahati</option>
+<option value="Gwalior">Gwalior</option>
+<option value="Haridwar">Haridwar</option>
+<option value="Howrah">Howrah</option>
+<option value="Hubballi">Hubballi</option>
+<option value="Hyderabad">Hyderabad</option>
+<option value="Imphal">Imphal</option>
+<option value="Indore">Indore</option>
+<option value="Jabalpur">Jabalpur</option>
+<option value="Jaipur">Jaipur</option>
+<option value="Jalandhar">Jalandhar</option>
+<option value="Jammu">Jammu</option>
+<option value="Jamshedpur">Jamshedpur</option>
+<option value="Jodhpur">Jodhpur</option>
+<option value="Kanpur">Kanpur</option>
+<option value="Kochi">Kochi</option>
+<option value="Kohima">Kohima</option>
+<option value="Kolkata">Kolkata</option>
+<option value="Kollam">Kollam</option>
+<option value="Kota">Kota</option>
+<option value="Kozhikode">Kozhikode</option>
+<option value="Lucknow">Lucknow</option>
+<option value="Ludhiana">Ludhiana</option>
+<option value="Madurai">Madurai</option>
+<option value="Mangaluru">Mangaluru</option>
+<option value="Meerut">Meerut</option>
+<option value="Mumbai">Mumbai</option>
+<option value="Mysuru">Mysuru</option>
+<option value="Nagpur">Nagpur</option>
+<option value="Nashik">Nashik</option>
+<option value="Noida">Noida</option>
+<option value="Patna">Patna</option>
+<option value="Prayagraj">Prayagraj</option>
+<option value="Puducherry">Puducherry</option>
+<option value="Pune">Pune</option>
+<option value="Raipur">Raipur</option>
+<option value="Rajkot">Rajkot</option>
+<option value="Ranchi">Ranchi</option>
+<option value="Rourkela">Rourkela</option>
+<option value="Salem">Salem</option>
+<option value="Shillong">Shillong</option>
+<option value="Shimla">Shimla</option>
+<option value="Siliguri">Siliguri</option>
+<option value="Srinagar">Srinagar</option>
+<option value="Surat">Surat</option>
+<option value="Thane">Thane</option>
+<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+<option value="Tiruchirappalli">Tiruchirappalli</option>
+<option value="Udaipur">Udaipur</option>
+<option value="Varanasi">Varanasi</option>
+<option value="Vijayawada">Vijayawada</option>
+<option value="Visakhapatnam">Visakhapatnam</option>
+<option value="Warangal">Warangal</option>
+<option value="Other">Other / not listed</option>
+                </select>
+
+            </label>
+            <div class="bdc-map-wrap">
+              <p class="bdc-map-caption">Nearby area preview</p>
+              <iframe id="findBloodMap" title="Map of selected city" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="find-blood-actions">
+
+                <button
+                    type="button"
+                    id="cancelFindBlood"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Find Blood
+                </button>
+
+            </div>
+
+
+            <p
+                id="findBloodModalMessage"
+                class="form-message"
+            ></p>
+
+        </form>
+
+    </div>
+
+</div>
+  <!-- REQUEST MODAL -->
+  <div id="requestModal" class="modal hidden">
+
+    <div class="modal-card">
+
+      <button
+        id="closeRequestModal"
+        class="modal-close"
+        type="button"
+      >
+        ×
+      </button>
+
+
+      <p class="eyebrow">BLOOD REQUEST</p>
+
+      <h2>Request Blood</h2>
+      <p style="color:var(--muted); margin:8px 0 16px;">Your request will be reviewed by the blood bank. Submission does not guarantee stock or transfusion; clinical compatibility and screening must be confirmed by authorised staff.</p>
+
+      <form id="requestForm" class="request-form">
+
+
+        <!-- BLOOD GROUP -->
+        <label>
+
+          Blood Group
+
+          <select id="requestBloodGroup" required>
+
+            <option value="">
+              Select blood group
+            </option>
+
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+
+          </select>
+
+        </label>
+
+
+        <!-- UNITS -->
+        <label>
+
+          Units Required
+
+          <input
+            type="number"
+            id="requestUnits"
+            min="1"
+            max="20"
+            value="1"
+            required
+          >
+
+        </label>
+
+
+        <!-- HOSPITAL -->
+        <label>
+          Hospital / Blood Bank
+          <input type="text" id="requestHospital" list="indiaHospitals" placeholder="Search hospital / blood bank or type a name" autocomplete="off">
+          <datalist id="indiaHospitals"><option value="AIIMS Bhubaneswar, Bhubaneswar, Odisha"></option><option value="SCB Medical College and Hospital, Cuttack, Odisha"></option><option value="Capital Hospital, Bhubaneswar, Odisha"></option><option value="KIMS Hospital, Bhubaneswar, Odisha"></option><option value="AMRI Hospitals, Bhubaneswar, Odisha"></option><option value="SUM Ultimate Medicare, Bhubaneswar, Odisha"></option><option value="MKCG Medical College and Hospital, Berhampur, Odisha"></option><option value="VIMSAR, Burla, Odisha"></option><option value="District Headquarters Hospital, Kendrapara, Odisha"></option><option value="AIIMS New Delhi, New Delhi"></option><option value="Safdarjung Hospital, New Delhi"></option><option value="Ram Manohar Lohia Hospital, New Delhi"></option><option value="PGIMER, Chandigarh"></option><option value="Fortis Hospital, Gurugram"></option><option value="Medanta The Medicity, Gurugram"></option><option value="AIIMS Rishikesh, Rishikesh"></option><option value="SMS Hospital, Jaipur"></option><option value="AIIMS Jodhpur, Jodhpur"></option><option value="SGPGIMS, Lucknow"></option><option value="KGMU, Lucknow"></option><option value="BHU Sir Sunderlal Hospital, Varanasi"></option><option value="AIIMS Patna, Patna"></option><option value="Apollo Hospitals, Kolkata"></option><option value="SSKM Hospital, Kolkata"></option><option value="AIIMS Kalyani, Kalyani"></option><option value="Tata Memorial Hospital, Mumbai"></option><option value="KEM Hospital, Mumbai"></option><option value="JJ Hospital, Mumbai"></option><option value="AIIMS Nagpur, Nagpur"></option><option value="Ruby Hall Clinic, Pune"></option><option value="Sassoon General Hospital, Pune"></option><option value="AIIMS Bhopal, Bhopal"></option><option value="AIIMS Raipur, Raipur"></option><option value="AIIMS Deoghar, Deoghar"></option><option value="AIIMS Guwahati, Guwahati"></option><option value="Apollo Hospitals, Chennai"></option><option value="Government General Hospital, Chennai"></option><option value="Christian Medical College, Vellore"></option><option value="JIPMER, Puducherry"></option><option value="AIIMS Mangalagiri, Mangalagiri"></option><option value="NIMS, Hyderabad"></option><option value="Osmania General Hospital, Hyderabad"></option><option value="AIIMS Bibinagar, Telangana"></option><option value="Manipal Hospitals, Bengaluru"></option><option value="Victoria Hospital, Bengaluru"></option><option value="Narayana Health, Bengaluru"></option><option value="AIIMS Madurai, Madurai"></option><option value="Government Medical College, Thiruvananthapuram"></option><option value="Amrita Hospital, Kochi"></option><option value="AIIMS Bathinda, Bathinda"></option><option value="Government Medical College, Amritsar"></option></datalist>
+          <small style="color:var(--muted)">Suggestions cover selected major facilities across India. You can type any other facility.</small>
+        </label>
+
+        <!-- CITY -->
+        <label>
+
+          City
+
+          <select id="requestCity" required>
+            <option value="">Select city</option>
+<option value="Agartala">Agartala</option>
+<option value="Agra">Agra</option>
+<option value="Ahmedabad">Ahmedabad</option>
+<option value="Ajmer">Ajmer</option>
+<option value="Aligarh">Aligarh</option>
+<option value="Amritsar">Amritsar</option>
+<option value="Asansol">Asansol</option>
+<option value="Aurangabad">Aurangabad</option>
+<option value="Bengaluru">Bengaluru</option>
+<option value="Bhopal">Bhopal</option>
+<option value="Bhubaneswar">Bhubaneswar</option>
+<option value="Bilaspur">Bilaspur</option>
+<option value="Chandigarh">Chandigarh</option>
+<option value="Chennai">Chennai</option>
+<option value="Coimbatore">Coimbatore</option>
+<option value="Cuttack">Cuttack</option>
+<option value="Dehradun">Dehradun</option>
+<option value="Delhi">Delhi</option>
+<option value="Dhanbad">Dhanbad</option>
+<option value="Dharamshala">Dharamshala</option>
+<option value="Durgapur">Durgapur</option>
+<option value="Faridabad">Faridabad</option>
+<option value="Gandhinagar">Gandhinagar</option>
+<option value="Ghaziabad">Ghaziabad</option>
+<option value="Goa">Goa</option>
+<option value="Greater Noida">Greater Noida</option>
+<option value="Guntur">Guntur</option>
+<option value="Gurugram">Gurugram</option>
+<option value="Guwahati">Guwahati</option>
+<option value="Gwalior">Gwalior</option>
+<option value="Haridwar">Haridwar</option>
+<option value="Howrah">Howrah</option>
+<option value="Hubballi">Hubballi</option>
+<option value="Hyderabad">Hyderabad</option>
+<option value="Imphal">Imphal</option>
+<option value="Indore">Indore</option>
+<option value="Jabalpur">Jabalpur</option>
+<option value="Jaipur">Jaipur</option>
+<option value="Jalandhar">Jalandhar</option>
+<option value="Jammu">Jammu</option>
+<option value="Jamshedpur">Jamshedpur</option>
+<option value="Jodhpur">Jodhpur</option>
+<option value="Kanpur">Kanpur</option>
+<option value="Kochi">Kochi</option>
+<option value="Kohima">Kohima</option>
+<option value="Kolkata">Kolkata</option>
+<option value="Kollam">Kollam</option>
+<option value="Kota">Kota</option>
+<option value="Kozhikode">Kozhikode</option>
+<option value="Lucknow">Lucknow</option>
+<option value="Ludhiana">Ludhiana</option>
+<option value="Madurai">Madurai</option>
+<option value="Mangaluru">Mangaluru</option>
+<option value="Meerut">Meerut</option>
+<option value="Mumbai">Mumbai</option>
+<option value="Mysuru">Mysuru</option>
+<option value="Nagpur">Nagpur</option>
+<option value="Nashik">Nashik</option>
+<option value="Noida">Noida</option>
+<option value="Patna">Patna</option>
+<option value="Prayagraj">Prayagraj</option>
+<option value="Puducherry">Puducherry</option>
+<option value="Pune">Pune</option>
+<option value="Raipur">Raipur</option>
+<option value="Rajkot">Rajkot</option>
+<option value="Ranchi">Ranchi</option>
+<option value="Rourkela">Rourkela</option>
+<option value="Salem">Salem</option>
+<option value="Shillong">Shillong</option>
+<option value="Shimla">Shimla</option>
+<option value="Siliguri">Siliguri</option>
+<option value="Srinagar">Srinagar</option>
+<option value="Surat">Surat</option>
+<option value="Thane">Thane</option>
+<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+<option value="Tiruchirappalli">Tiruchirappalli</option>
+<option value="Udaipur">Udaipur</option>
+<option value="Varanasi">Varanasi</option>
+<option value="Vijayawada">Vijayawada</option>
+<option value="Visakhapatnam">Visakhapatnam</option>
+<option value="Warangal">Warangal</option>
+<option value="Other">Other / not listed</option>
+          </select>
+
+        </label>
+        <div class="bdc-map-wrap">
+          <p class="bdc-map-caption">Hospital / city location preview</p>
+          <iframe id="requestLocationMap" title="Map of selected hospital or city" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+
+        <!-- PRIORITY -->
+        <label>
+
+          Priority
+
+          <select id="requestPriority" required>
+
+            <option value="normal">
+              Normal
+            </option>
+
+            <option value="urgent">
+              Urgent
+            </option>
+
+            <option value="emergency">
+              Emergency
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <!-- REQUIRED DATE -->
+        <label>
+
+          Required Date
+
+          <input
+            type="date"
+            id="requiredDate"
+            required
+          >
+
+        </label>
+
+
+        <!-- NOTES -->
+        <label>
+
+          Additional Notes
+
+          <textarea
+            id="additionalNotes"
+            placeholder="Hospital name, patient condition, or any additional information..."
+          ></textarea>
+
+        </label>
+
+
+        <button
+          type="submit"
+          class="primary-btn"
+        >
+          Submit Blood Request
+        </button>
+
+
+        <p
+          id="requestMessage"
+          class="form-message"
+        ></p>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- PAGE MESSAGE -->
+  <p
+    id="pageMessage"
+    class="form-message"
+  ></p>
+
+</main>
+
+
+<script>
+(function(){
+ const mapUrl=(q)=>'https://maps.google.com/maps?q='+encodeURIComponent(q||'India')+'&output=embed';
+ const city=document.getElementById('findBloodCity'); const findMap=document.getElementById('findBloodMap');
+ const reqCity=document.getElementById('requestCity'); const hospital=document.getElementById('requestHospital'); const reqMap=document.getElementById('requestLocationMap');
+ const updateFind=()=>{if(findMap) findMap.src=mapUrl([city?.value,'India'].filter(Boolean).join(', '));};
+ const updateReq=()=>{if(reqMap) reqMap.src=mapUrl([hospital?.value,reqCity?.value,'India'].filter(Boolean).join(', '));};
+ city?.addEventListener('change',updateFind); reqCity?.addEventListener('change',updateReq); hospital?.addEventListener('change',updateReq); hospital?.addEventListener('blur',updateReq);
+ updateFind(); updateReq();
+})();
+</script>
+<script>window.bdcSetCityValue=function(id,value){const el=document.getElementById(id);if(!el||!value)return;if(!Array.from(el.options).some(o=>o.value.toLowerCase()===String(value).toLowerCase())){const opt=document.createElement('option');opt.value=value;opt.textContent=value+' (saved location)';el.insertBefore(opt,el.lastElementChild);}el.value=value;};</script>
+<script type="module" src="js/patient-dashboard.js"></script>
+
+
+<script src="js/odisha-locations.js"></script>
+</body>
+</html>

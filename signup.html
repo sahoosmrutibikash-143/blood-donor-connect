@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Create Account | Blood Donor Connect</title>
+
+  <link rel="stylesheet" href="css/auth.css">
+
+  <style>
+    /* Make the date field suitable for the dark theme */
+    #lastDonationDate {
+      color-scheme: dark;
+      cursor: pointer;
+    }
+
+    /* Improve calendar icon visibility in Chrome and Edge */
+    #lastDonationDate::-webkit-calendar-picker-indicator {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    /* Eligibility message spacing */
+    #donationEligibilityMessage {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="form-shell">
+
+  <a class="back" href="index.html">
+    ← Back to login
+  </a>
+
+  <div class="form-card wide">
+
+    <div class="mini-logo">
+      🩸
+    </div>
+
+    <p class="eyebrow" id="roleLabel">
+      ACCOUNT
+    </p>
+
+    <h1>
+      Create your account
+    </h1>
+
+    <p class="muted">
+      Use a valid email. If email confirmation is enabled
+      in Supabase, confirm it before signing in.
+    </p>
+
+    <form id="signupForm">
+
+      <!-- FULL NAME -->
+      <label>
+        Full name
+
+        <input
+          id="fullName"
+          type="text"
+          autocomplete="name"
+          required
+        >
+      </label>
+
+      <!-- EMAIL -->
+      <label>
+        Email
+
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+          required
+        >
+      </label>
+
+      <!-- MOBILE -->
+      <label>
+        Mobile number
+
+        <input
+          id="mobile"
+          type="tel"
+          autocomplete="tel"
+          placeholder="+91 9876543210"
+          required
+        >
+      </label>
+
+      <!-- BLOOD GROUP + CITY -->
+      <div id="bloodInfoFields">
+
+        <label>
+          Blood group
+
+          <select id="bloodGroup" required>
+            <option value="">Select blood group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </label>
+
+        <label>
+          City
+
+          <select id="city" required>
+            <option value="">Select city</option>
+<option value="Agartala">Agartala</option>
+<option value="Agra">Agra</option>
+<option value="Ahmedabad">Ahmedabad</option>
+<option value="Ajmer">Ajmer</option>
+<option value="Aligarh">Aligarh</option>
+<option value="Amritsar">Amritsar</option>
+<option value="Asansol">Asansol</option>
+<option value="Aurangabad">Aurangabad</option>
+<option value="Bengaluru">Bengaluru</option>
+<option value="Bhopal">Bhopal</option>
+<option value="Bhubaneswar">Bhubaneswar</option>
+<option value="Bilaspur">Bilaspur</option>
+<option value="Chandigarh">Chandigarh</option>
+<option value="Chennai">Chennai</option>
+<option value="Coimbatore">Coimbatore</option>
+<option value="Cuttack">Cuttack</option>
+<option value="Dehradun">Dehradun</option>
+<option value="Delhi">Delhi</option>
+<option value="Dhanbad">Dhanbad</option>
+<option value="Dharamshala">Dharamshala</option>
+<option value="Durgapur">Durgapur</option>
+<option value="Faridabad">Faridabad</option>
+<option value="Gandhinagar">Gandhinagar</option>
+<option value="Ghaziabad">Ghaziabad</option>
+<option value="Goa">Goa</option>
+<option value="Greater Noida">Greater Noida</option>
+<option value="Guntur">Guntur</option>
+<option value="Gurugram">Gurugram</option>
+<option value="Guwahati">Guwahati</option>
+<option value="Gwalior">Gwalior</option>
+<option value="Haridwar">Haridwar</option>
+<option value="Howrah">Howrah</option>
+<option value="Hubballi">Hubballi</option>
+<option value="Hyderabad">Hyderabad</option>
+<option value="Imphal">Imphal</option>
+<option value="Indore">Indore</option>
+<option value="Jabalpur">Jabalpur</option>
+<option value="Jaipur">Jaipur</option>
+<option value="Jalandhar">Jalandhar</option>
+<option value="Jammu">Jammu</option>
+<option value="Jamshedpur">Jamshedpur</option>
+<option value="Jodhpur">Jodhpur</option>
+<option value="Kanpur">Kanpur</option>
+<option value="Kochi">Kochi</option>
+<option value="Kohima">Kohima</option>
+<option value="Kolkata">Kolkata</option>
+<option value="Kollam">Kollam</option>
+<option value="Kota">Kota</option>
+<option value="Kozhikode">Kozhikode</option>
+<option value="Lucknow">Lucknow</option>
+<option value="Ludhiana">Ludhiana</option>
+<option value="Madurai">Madurai</option>
+<option value="Mangaluru">Mangaluru</option>
+<option value="Meerut">Meerut</option>
+<option value="Mumbai">Mumbai</option>
+<option value="Mysuru">Mysuru</option>
+<option value="Nagpur">Nagpur</option>
+<option value="Nashik">Nashik</option>
+<option value="Noida">Noida</option>
+<option value="Patna">Patna</option>
+<option value="Prayagraj">Prayagraj</option>
+<option value="Puducherry">Puducherry</option>
+<option value="Pune">Pune</option>
+<option value="Raipur">Raipur</option>
+<option value="Rajkot">Rajkot</option>
+<option value="Ranchi">Ranchi</option>
+<option value="Rourkela">Rourkela</option>
+<option value="Salem">Salem</option>
+<option value="Shillong">Shillong</option>
+<option value="Shimla">Shimla</option>
+<option value="Siliguri">Siliguri</option>
+<option value="Srinagar">Srinagar</option>
+<option value="Surat">Surat</option>
+<option value="Thane">Thane</option>
+<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+<option value="Tiruchirappalli">Tiruchirappalli</option>
+<option value="Udaipur">Udaipur</option>
+<option value="Varanasi">Varanasi</option>
+<option value="Vijayawada">Vijayawada</option>
+<option value="Visakhapatnam">Visakhapatnam</option>
+<option value="Warangal">Warangal</option>
+<option value="Other">Other / not listed</option>
+          </select>
+        </label>
+
+      </div>
+
+      <!-- DONOR-ONLY FIELD -->
+      <div
+        id="donorFields"
+        class="donor-fields hidden"
+      >
+
+        <label>
+          Last donation date (optional)
+
+          <input
+            id="lastDonationDate"
+            type="date"
+          >
+        </label>
+
+        <p
+          id="donationEligibilityMessage"
+          class="form-message"
+          aria-live="polite"
+        ></p>
+
+      </div>
+
+      <!-- PASSWORD -->
+      <label>
+        Password
+
+        <input
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          minlength="8"
+          required
+        >
+      </label>
+
+      <!-- CONFIRM PASSWORD -->
+      <label>
+        Confirm password
+
+        <input
+          id="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="8"
+          required
+        >
+      </label>
+
+      <!-- SUBMIT -->
+      <button
+        class="primary-btn"
+        type="submit"
+      >
+        Create account
+      </button>
+
+      <!-- MESSAGE -->
+      <p
+        id="message"
+        class="form-message"
+        aria-live="polite"
+      ></p>
+
+    </form>
+
+  </div>
+
+</main>
+
+<script>window.bdcSetCityValue=function(id,value){const el=document.getElementById(id);if(!el||!value)return;if(!Array.from(el.options).some(o=>o.value.toLowerCase()===String(value).toLowerCase())){const opt=document.createElement('option');opt.value=value;opt.textContent=value+' (saved location)';el.insertBefore(opt,el.lastElementChild);}el.value=value;};</script>
+<script
+  type="module"
+  src="js/auth.js"
+></script>
+
+
+<script src="js/odisha-locations.js"></script>
+</body>
+</html>

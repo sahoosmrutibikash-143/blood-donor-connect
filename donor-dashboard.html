@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Donor Dashboard | Blood Donor Connect</title><link rel="stylesheet" href="css/dashboard.css"><style>
+  /* =========================================
+     DONOR PROFILE MODAL - FIXED CENTERING
+     ========================================= */
+
+  #profileModal {
+    position: fixed !important;
+    inset: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 20px !important;
+    box-sizing: border-box !important;
+
+    background: rgba(0, 0, 0, 0.78) !important;
+
+    z-index: 99999 !important;
+  }
+
+  /* Hidden state */
+  #profileModal.hidden {
+    display: none !important;
+  }
+
+  /* Modal box */
+  #profileModal .modal-card {
+    position: relative !important;
+
+    width: min(520px, calc(100vw - 40px)) !important;
+    max-width: 520px !important;
+
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+
+    margin: 0 !important;
+
+    box-sizing: border-box !important;
+
+    background: #121216 !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+
+    border-radius: 22px !important;
+
+    padding: 30px !important;
+
+    box-shadow:
+      0 25px 80px rgba(0, 0, 0, 0.65) !important;
+  }
+
+  /* Close button */
+  #profileModal .modal-close {
+    position: absolute !important;
+
+    top: 16px !important;
+    right: 16px !important;
+
+    width: 36px !important;
+    height: 36px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 !important;
+
+    border-radius: 50% !important;
+
+    cursor: pointer !important;
+
+    z-index: 10 !important;
+  }
+
+  /* Form inside modal */
+  #profileModal #profileForm {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  #profileModal #profileForm label {
+    display: grid;
+    gap: 7px;
+  }
+
+  #profileModal #profileForm input,
+  #profileModal #profileForm select {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 12px 13px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    background: #0b0b0e;
+    color: white;
+
+    outline: none;
+  }
+
+  #profileModal #profileForm input:focus,
+  #profileModal #profileForm select:focus {
+    border-color: #ff4757;
+  }
+
+  #profileModal #profileForm .primary-btn {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+
+    #profileModal {
+      padding: 15px !important;
+    }
+
+    #profileModal .modal-card {
+      width: 100% !important;
+      max-width: none !important;
+
+      padding: 24px !important;
+
+      border-radius: 18px !important;
+    }
+
+  }
+</style></head><body><main class="dashboard"><header><div><p class="eyebrow">DONOR PORTAL</p><h1>Welcome, <span id="donorName">Donor</span></h1><p class="muted">Manage your donor information and availability. Availability is self-reported; blood-bank staff must confirm eligibility and screening before donation.</p></div><button id="logout" class="outline-btn" type="button">Logout</button></header>
+<section class="profile-card"><div class="section-heading"><div><p class="eyebrow">YOUR PROFILE</p><h2>Donor information</h2></div><button id="editProfileBtn" class="primary-btn" type="button">Edit profile</button></div><div class="profile-grid"><div class="profile-item"><span>Name</span><strong id="fullName">—</strong></div><div class="profile-item"><span>Blood group</span><strong id="bloodGroup" class="blood-value">—</strong></div><div class="profile-item"><span>Mobile</span><strong id="mobile">—</strong></div><div class="profile-item"><span>City</span><strong id="city">—</strong></div><div class="profile-item"><span>Last donation</span><strong id="lastDonation">—</strong></div><div class="profile-item"><span>Account status</span><strong id="accountStatus">—</strong></div></div></section>
+<section class="history-card" style="margin-top:18px"><div class="section-heading"><div><p class="eyebrow">LOCATION</p><h2>Your city on map</h2><p class="muted">This previews your city only; your exact home location is never displayed.</p></div></div><iframe id="donorCityMap" title="Donor city map" loading="lazy" style="width:100%;height:220px;border:0;border-radius:12px"></iframe></section>
+<section class="control-grid"><article class="control-card"><div id="availabilityIcon" class="control-icon">🔴</div><h2>Donation availability</h2><p id="availabilityText">Loading...</p><button id="availabilityToggle" class="status-btn" type="button">Loading...</button></article><article class="control-card"><div class="control-icon">🚨</div><h2>Emergency availability</h2><p id="emergencyText">Loading...</p><button id="emergencyToggle" class="status-btn" type="button">Loading...</button></article></section>
+<section class="history-card"><div class="section-heading"><div><p class="eyebrow">DONATION HISTORY</p><h2>Your donations</h2></div></div><div id="donationHistory" class="empty-state"><span>🩸</span><div><h3>No donation records yet</h3><p>Your confirmed donation history will appear here.</p></div></div></section><p id="pageMessage" class="form-message"></p></main>
+<div id="profileModal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="modal-close" type="button">×</button><p class="eyebrow">PROFILE</p><h2>Edit donor profile</h2><form id="profileForm"><label>Blood group<select id="editBloodGroup" required><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></label><label>City<select id="editCity" required><option value="">Select city</option>
+<option value="Agartala">Agartala</option>
+<option value="Agra">Agra</option>
+<option value="Ahmedabad">Ahmedabad</option>
+<option value="Ajmer">Ajmer</option>
+<option value="Aligarh">Aligarh</option>
+<option value="Amritsar">Amritsar</option>
+<option value="Asansol">Asansol</option>
+<option value="Aurangabad">Aurangabad</option>
+<option value="Bengaluru">Bengaluru</option>
+<option value="Bhopal">Bhopal</option>
+<option value="Bhubaneswar">Bhubaneswar</option>
+<option value="Bilaspur">Bilaspur</option>
+<option value="Chandigarh">Chandigarh</option>
+<option value="Chennai">Chennai</option>
+<option value="Coimbatore">Coimbatore</option>
+<option value="Cuttack">Cuttack</option>
+<option value="Dehradun">Dehradun</option>
+<option value="Delhi">Delhi</option>
+<option value="Dhanbad">Dhanbad</option>
+<option value="Dharamshala">Dharamshala</option>
+<option value="Durgapur">Durgapur</option>
+<option value="Faridabad">Faridabad</option>
+<option value="Gandhinagar">Gandhinagar</option>
+<option value="Ghaziabad">Ghaziabad</option>
+<option value="Goa">Goa</option>
+<option value="Greater Noida">Greater Noida</option>
+<option value="Guntur">Guntur</option>
+<option value="Gurugram">Gurugram</option>
+<option value="Guwahati">Guwahati</option>
+<option value="Gwalior">Gwalior</option>
+<option value="Haridwar">Haridwar</option>
+<option value="Howrah">Howrah</option>
+<option value="Hubballi">Hubballi</option>
+<option value="Hyderabad">Hyderabad</option>
+<option value="Imphal">Imphal</option>
+<option value="Indore">Indore</option>
+<option value="Jabalpur">Jabalpur</option>
+<option value="Jaipur">Jaipur</option>
+<option value="Jalandhar">Jalandhar</option>
+<option value="Jammu">Jammu</option>
+<option value="Jamshedpur">Jamshedpur</option>
+<option value="Jodhpur">Jodhpur</option>
+<option value="Kanpur">Kanpur</option>
+<option value="Kochi">Kochi</option>
+<option value="Kohima">Kohima</option>
+<option value="Kolkata">Kolkata</option>
+<option value="Kollam">Kollam</option>
+<option value="Kota">Kota</option>
+<option value="Kozhikode">Kozhikode</option>
+<option value="Lucknow">Lucknow</option>
+<option value="Ludhiana">Ludhiana</option>
+<option value="Madurai">Madurai</option>
+<option value="Mangaluru">Mangaluru</option>
+<option value="Meerut">Meerut</option>
+<option value="Mumbai">Mumbai</option>
+<option value="Mysuru">Mysuru</option>
+<option value="Nagpur">Nagpur</option>
+<option value="Nashik">Nashik</option>
+<option value="Noida">Noida</option>
+<option value="Patna">Patna</option>
+<option value="Prayagraj">Prayagraj</option>
+<option value="Puducherry">Puducherry</option>
+<option value="Pune">Pune</option>
+<option value="Raipur">Raipur</option>
+<option value="Rajkot">Rajkot</option>
+<option value="Ranchi">Ranchi</option>
+<option value="Rourkela">Rourkela</option>
+<option value="Salem">Salem</option>
+<option value="Shillong">Shillong</option>
+<option value="Shimla">Shimla</option>
+<option value="Siliguri">Siliguri</option>
+<option value="Srinagar">Srinagar</option>
+<option value="Surat">Surat</option>
+<option value="Thane">Thane</option>
+<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+<option value="Tiruchirappalli">Tiruchirappalli</option>
+<option value="Udaipur">Udaipur</option>
+<option value="Varanasi">Varanasi</option>
+<option value="Vijayawada">Vijayawada</option>
+<option value="Visakhapatnam">Visakhapatnam</option>
+<option value="Warangal">Warangal</option>
+<option value="Other">Other / not listed</option></select></label><label>Last donation date<input id="editLastDonation" type="date"></label><button class="primary-btn" type="submit">Save changes</button><p id="profileMessage" class="form-message"></p></form></div></div>
+<script>
+(function(){const city=document.getElementById('city');const map=document.getElementById('donorCityMap');const update=()=>{if(map)map.src='https://maps.google.com/maps?q='+encodeURIComponent((city?.textContent||'India')+', India')+'&output=embed';};update();setTimeout(update,800);})();
+</script>
+<script>window.bdcSetCityValue=function(id,value){const el=document.getElementById(id);if(!el||!value)return;if(!Array.from(el.options).some(o=>o.value.toLowerCase()===String(value).toLowerCase())){const opt=document.createElement('option');opt.value=value;opt.textContent=value+' (saved location)';el.insertBefore(opt,el.lastElementChild);}el.value=value;};</script>
+<script type="module" src="js/dashboard.js"></script>
+<script src="js/odisha-locations.js"></script>
+</body></html>
