@@ -545,6 +545,11 @@ if (signupForm) {
       email,
       password,
       options: {
+        // Redirect to the correct login page after email confirmation.
+        emailRedirectTo: new URL(
+          role === "patient" ? "patient-login.html" : "donor-login.html",
+          window.location.href
+        ).href,
         data: metadata
       }
     });
